@@ -24,6 +24,26 @@ var c = canvas.getContext('2d');
 // c.stroke();
 
 //ARC OR CIRCLE
+//RANDOMLY GENERATED CIRCLES
+// for (i=0; i < 5; i++) {
+// 	var x = Math.random() * window.innerWidth;
+// 	var y = Math.random() * window.innerHeight;
+// 	c.beginPath();
+// 	c.arc(x, y, 30, 0, Math.PI * 2, false);
+// 	c.strokeStyle = 'white';
+// 	c.stroke();
+// }
+
+var mouse = {
+	x: undefined,
+	y: undefined
+};
+
+window.addEventListener('mousemove', function(event) {
+	mouse.x = event.x;
+	mouse.y = event.y;
+	console.log(mouse);
+});
 
 function Circle(x, y, dx, dy, radius) {
 	this.x = x;
@@ -35,8 +55,9 @@ function Circle(x, y, dx, dy, radius) {
 	this.draw = function() {
 		c.beginPath();
 		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-		c.strokeStyle = 'white';
+		c.strokeStyle = 'black';
 		c.stroke();
+		c.fill();
 	};
 
 	this.update = function() {
@@ -50,27 +71,45 @@ function Circle(x, y, dx, dy, radius) {
 
 		this.x += this.dx;
 		this.y += this.dy;
+
+		//interactivity with mouse
+		if (mouse.x - this.x < 30 && mouse.x - this.x > -30 && mouse.y - this.y < 30 && mouse.y - this.y > -30) {
+			this.radius += 1;
+		}
+
+		this.draw()
 	};
 }
 
-var circle = new Circle(200, 200, 3, 3, 30);
+// var circle = new Circle(200, 200, 3, 3, 30);
+
+
+
+var circleArray = [];
+
+for (i = 0; i < 5; i++) {
+	var radius = 30;
+	var x = Math.random() * (innerWidth - radius * 2) + radius;
+	var y = Math.random() * (innerHeight - radius * 2) + radius;
+	var dx = (Math.random() - 0.5) * 4;
+	var dy = (Math.random() - 0.5) * 4;
+	circleArray.push(new Circle(x, y, dx, dy, radius));
+} 
+
+
+
+
 
 function animateCircle() {
 	requestAnimationFrame(animateCircle);
 	c.clearRect(0, 0, innerWidth, innerHeight);
 
-	circle.draw();
-	circle.update();
+	for (i=0; i<circleArray.length; i++) {
+		circleArray[i].update();
+	}
+
+	// circle.update();
 }
 
 animateCircle();
 
-//RANDOMLY GENERATED CIRCLES
-// for (i=0; i < 5; i++) {
-// 	var x = Math.random() * window.innerWidth;
-// 	var y = Math.random() * window.innerHeight;
-// 	c.beginPath();
-// 	c.arc(x, y, 30, 0, Math.PI * 2, false);
-// 	c.strokeStyle = 'white';
-// 	c.stroke();
-// }
